@@ -45,15 +45,6 @@ def calculate_bleu(references, candidates, max_n=4):
     """
     total_p = 0
     
-    # Pre-tokenize (character level is already tokenized effectively, but let's treat string as list of chars)
-    # Actually, for this task, "words" are characters? No, usually BLEU is word-level.
-    # But the user asked for "Tokenization: choose proper tokenization strategy...".
-    # Since I used char-level model, the output is characters.
-    # For BLEU, we can treat characters as tokens (Char-BLEU) or reconstruct words and use Word-BLEU.
-    # Given it's transliteration, Char-BLEU is often used, but standard BLEU is word-based.
-    # However, since the target is Roman Urdu, space-separated words exist.
-    # I will split by space for BLEU calculation to make it "Word-BLEU".
-    
     ref_tokens = [r.split() for r in references]
     cand_tokens = [c.split() for c in candidates]
     
