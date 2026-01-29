@@ -124,6 +124,26 @@ def run_experiment(config, dataset_path, device, experiment_name):
         print(f'\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}')
         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. PPL: {math.exp(valid_loss):7.3f} | BLEU: {valid_bleu:.3f} | CER: {valid_cer:.3f}')
         
+        # Qualitative check every epoch
+        model.eval()
+        with torch.no_grad():
+            # Get a random sample from validation
+            src, trg = next(iter(val_loader))
+            src = src.to(device)
+            trg = trg.to(device)
+            output = model(src, trg, 0) # turn off teacher forcing
+            top1 = output.argmax(2)
+            
+            # Decode first sentence in batch
+            src_sent = src_tokenizer.decode(src[0].tolist())
+            trg_sent = tgt_tokenizer.decode(trg[0].tolist())
+            pred_sent = tgt_tokenizer.decode(top1[0].tolist())
+            
+            print(f"\tExample:")
+            print(f"\tSrc: {src_sent}")
+            print(f"\tTrg: {trg_sent}")
+            print(f"\tPrd: {pred_sent}")
+        
     # Test Evaluation
     model.load_state_dict(torch.load(f'checkpoints/{experiment_name}_best.pt'))
     test_loss, test_bleu, test_cer = evaluate(model, test_loader, criterion, device, tgt_tokenizer)
@@ -150,7 +170,7 @@ if __name__ == "__main__":
         'dropout': 0.3,
         'lr': 1e-3,
         'batch_size': 128,
-        'epochs': 5, # Kept low for demo, increase for real training
+        'epochs': 50, # Increased for better convergence
         'clip': 1
     }
     
