@@ -7,8 +7,8 @@ def check_vocab():
     src_tokenizer = Tokenizer()
     src_tokenizer.build_vocab([p[0] for p in pairs])
     
-    input_text = "و علیکم السلام"
-    print(f"Input: {input_text}")
+    # input_text = "و علیکم السلام"
+    # print(f"Input: {input_text}")
     
     print("Character check:")
     for char in input_text:
