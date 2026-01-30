@@ -16,10 +16,6 @@ class Encoder(nn.Module):
         self.dropout = nn.Dropout(dropout)
         
     def forward(self, src):
-        # src = [src len, batch size] (if batch_first=False)
-        # But my dataloader uses batch_first=True. 
-        # LSTM expects [seq_len, batch, input_size] by default unless batch_first=True is set.
-        # I will use batch_first=True in LSTM for consistency.
         
         # src = [batch size, src len]
         embedded = self.dropout(self.embedding(src))
